@@ -8,51 +8,69 @@
 2 - нет результата
 */
 
+
+//чтение числа
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>   
+#include <limits.h> 
+
 //чтение числа
 int parse(const char *str, int *result){
     if(str == NULL || result == NULL || str[0] == '\0'){
         return 1;
     }
     char *end = NULL;
+    errno = 0; 
     long val = strtol(str, &end, 10);
 
     if (*end != '\0') {
-        return 1; // при обнаружении не десятичных символов - ошибка
+        return 1; 
     }
-    *result = (int)val; 
+    if (errno == ERANGE || val > INT_MAX || val < INT_MIN) {
+        return 1; 
+    }
+    *result = (int)val;
     return 0;
-
 }
 
 
-// 1.1
 
-int multiple(int x, int *arr, int *count){
-    if(x <= 0 || arr == NULL || count == NULL){
-        return 1;
+
+// 1.1
+int multiple(int x, int *arr, int max_size, int *count) {
+    if (x <= 0 || arr == NULL || count == NULL || max_size <= 0) {
+        return 1; // Ошибка параметров
     }
     *count = 0;
-    for(int i = x; i <= 100; i = i + x){
+    for (int i = x; i <= 100; i += x) {
+        if (*count >= max_size) {
+            break; // Защита от переполнения массива
+        }
         arr[*count] = i;
-        *count = *count + 1;
+        (*count)++;
     }
-    if(*count == 0){
-        return 2;
+    if (*count == 0) {
+        return 2; // Кратных чисел нет
     }
     return 0;
 }
 
 
 //1.2
-int is_prime(int x, int *res){
-    if(x < 2 || res == NULL){
+int is_prime(int x, int *res) {
+    if (res == NULL) {
         return 1;
     }
-    *res = 1;
-    for(int i = 2; i < x; i++){
-        if(x % i == 0){
-            *res = 0;
-            break; //у числа есть делитель - составное
+    if (x < 2) {
+        return 2;
+    }
+    *res = 1;   
+    for (int i = 2; i * i <= x; i++) {
+        if (x % i == 0) {
+            *res = 0; // Нашли делитель — число составное
+            break;
         }
     }
     return 0;
@@ -74,26 +92,34 @@ int sum_all(int x, long long *result){
 
 
 //1.6
-int factorial(int x, long long *fac){
-    if(x < 0 || fac == NULL){
+int factorial(int x, long long *fac) {
+    if (fac == NULL || x < 0) {
         return 1;
     }
-    *fac = 1;
-    for(int i = 1; i <= x; i++){
-        *fac = *fac * i;
+    if (x > 20) {
+        return 2; // Переполнение long long
     }
+
+    *fac = 1;
+    for (int i = 1; i <= x; i++) {
+        *fac *= i;
+    }
+
     return 0;
 }
 
 
 //1.4
-int power(long long base, int x, long long *result){
-    if(x < 0 || result == NULL){
+int power(long long base, int x, long long *result) {
+    if (x < 0 || result == NULL) {
         return 1;
     }
     long long res = 1;
-    for(int i = 0; i < x; i++){
-        res = res * base;
+    for (int i = 0; i < x; i++) {
+        if (base != 0 && res > LLONG_MAX / base) {
+            return 2; // Переполнение
+        }
+        res *= base;
     }
     *result = res;
     return 0;
@@ -154,7 +180,7 @@ int main(int argc, char *argv[]){
         case 'h':{
             int numbers[100];
             int count = 0;
-            st = multiple(x, numbers, &count);
+            st = multiple(x, numbers, 100, &count);
             if(st == 1){
                 printf("Ошибка - передайте правильно параметры!\n");
             }
@@ -173,17 +199,18 @@ int main(int argc, char *argv[]){
 
 
         //1.2
-        case 'p':{
+        case 'p': {
             int res = 0;
             st = is_prime(x, &res);
-            if(st == 1){
-                printf("Ошибка - передайте правильно параметры!\n");
-            }else{
-                if(res == 1){
-                    printf("Число простое!\n");
-                }
-                else{
-                    printf("Число составное!\n");
+            if (st == 1) {
+                printf("Ошибка - неверный указатель!\n");
+            } else if (st == 2) {
+                printf("Число %d не является ни простым, ни составным\n", x);
+            } else {
+                if (res == 1) {
+                    printf("Число %d — простое\n", x);
+                } else {
+                    printf("Число %d — составное\n", x);
                 }
             }
             break;
@@ -204,12 +231,14 @@ int main(int argc, char *argv[]){
 
 
         //1.6
-        case 'f':{
+        case 'f': {
             long long fac = 0;
             st = factorial(x, &fac);
-            if(st == 1){
-                printf("Ошибка - передайте правильно параметры!\n");
-            }else{
+            if (st == 1) {
+                printf("Ошибка - число x должно быть неотрицательным\n");
+            } else if (st == 2) {
+                printf("Ошибка - вычисление невозможно: x должно быть <= 20 (переполнение)\n");
+            } else {
                 printf("Факториал числа %d равен %lld\n", x, fac);
             }
             break;
