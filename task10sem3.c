@@ -7,9 +7,7 @@
 
 #define BUFFER_SIZE 256
 
-// -------------------------------------------------------------
-// Парсинг целого числа с полной проверкой переполнения
-// -------------------------------------------------------------
+
 int parse_int(const char *str, int *val) {
     if (str == NULL || val == NULL || str[0] == '\0') {
         return 1;
@@ -24,9 +22,6 @@ int parse_int(const char *str, int *val) {
     return 0;
 }
 
-// -------------------------------------------------------------
-// Перевод строки из произвольной СС [2..36] в long long с защитой от overflow
-// -------------------------------------------------------------
 int string_to_long(const char *str, int base, long long *val) {
     if (str == NULL || val == NULL || base < 2 || base > 36 || str[0] == '\0') {
         return 1;
@@ -91,9 +86,6 @@ int string_to_long(const char *str, int base, long long *val) {
     return 0;
 }
 
-// -------------------------------------------------------------
-// Перевод числа в строку в СС [2..36] без ведущих нулей
-// -------------------------------------------------------------
 int long_to_string(long long val, int base, char *out_str, size_t out_size) {
     if (out_str == NULL || out_size == 0 || base < 2 || base > 36) {
         return 1;
@@ -144,9 +136,7 @@ int long_to_string(long long val, int base, char *out_str, size_t out_size) {
     return 0;
 }
 
-// -------------------------------------------------------------
-// Безопасное абсолютное значение для long long
-// -------------------------------------------------------------
+
 unsigned long long safe_abs(long long val) {
     if (val < 0) {
         return (unsigned long long)(-(val + 1)) + 1ULL;
@@ -154,9 +144,6 @@ unsigned long long safe_abs(long long val) {
     return (unsigned long long)val;
 }
 
-// -------------------------------------------------------------
-// Вывод числа в системах счисления 9, 18, 27 и 36
-// -------------------------------------------------------------
 int print_number_in_bases(long long num, const char *label) {
     int bases[] = {9, 18, 27, 36};
     char buffer[BUFFER_SIZE];
@@ -238,9 +225,7 @@ int process_input_stream(int base) {
     return 0;
 }
 
-// -------------------------------------------------------------
-// Точка входа (main)
-// -------------------------------------------------------------
+
 int main(int argc, char *argv[]) {
     int base = 0;
 
