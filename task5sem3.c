@@ -63,7 +63,6 @@ int sum_c(double x, double eps, double *res) {
     while (fabs(term) > eps) {
         sum += term;
         n++;
-        /* Коэффициент рекуррентности: 27 * n^3 * x^2 / ((3n - 2) * (3n - 1) * 3n) */
         term *= (27.0 * n * n * n * x * x) / ((3.0 * n - 2.0) * (3.0 * n - 1.0) * (3.0 * n));
     }
     *res = sum;
@@ -76,10 +75,10 @@ int sum_d(double x, double eps, double *res) {
         return 1;
     }
     if (fabs(x) >= 1.0) {
-        return 1; /* Ряд сходится только при |x| < 1 */
+        return 1; 
     }
     double sum = 0.0;
-    double term = - (1.0 * x * x) / 2.0; /* При n = 1: (-1)^1 * 1!! * x^2 / 2!! = -x^2 / 2 */
+    double term = - (1.0 * x * x) / 2.0; 
     int n = 1;
 
     while (fabs(term) > eps) {
@@ -103,7 +102,6 @@ int integrate_a(double eps, double *res) {
     do {
         prev_sum = curr_sum;
         double h = 1.0 / n;
-        /* lim_{x->0} ln(1+x)/x = 1 */
         double sum = 0.5 * (1.0 + log(2.0)); 
 
         for (int i = 1; i < n; i++) {
@@ -184,7 +182,6 @@ int integrate_d(double eps, double *res) {
     do {
         prev_sum = curr_sum;
         double h = 1.0 / n;
-        /* lim_{x->0} x^x = 1 */
         double sum = 0.5 * (1.0 + pow(1.0, 1.0));
 
         for (int i = 1; i < n; i++) {
