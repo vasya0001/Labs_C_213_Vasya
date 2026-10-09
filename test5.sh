@@ -1,7 +1,6 @@
 #!/bin/bash
 
 gcc -std=c99 -Wall -Wextra task5sem3.c -lm -o main || exit 1
-
 ./main
 ./main 0.001
 ./main abc 1
