@@ -1,6 +1,3 @@
-#!/bin/bash
-
-# Сборка программы
 gcc -std=c99 -Wall -Wextra task1sem3.c -o main || exit 1
 
 #ОШИБКИ ВВОДА И АРГУМЕНТОВ
