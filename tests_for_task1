@@ -1,0 +1,8 @@
+./prog -l hello          -> Длина строки: 5
+./prog -r hello          -> olleh
+./prog -u abcdef         -> aBcDeF
+./prog -n a1b2!c3        -> 123abc!
+./prog -c ab 42 cd ef    -> один и тот же порядок при одном seed
+./prog -c ab -5 cd       -> ошибка seed
+./prog -x hello          -> неизвестный флаг
+./prog -l                -> ошибка количества аргументов
