@@ -1,0 +1,4 @@
+4 Ivan Petrov 1500.50
+2 Anna Smith 900
+3 Bob Petrov 1500.50
+1 Carl Adams 900
