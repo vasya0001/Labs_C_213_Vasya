@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stddef.h>
+#include <stdint.h>
 
 typedef enum{
     STATUS_OK,
@@ -9,6 +10,18 @@ typedef enum{
     STATUS_ERROR_NULL,
     STATUS_ERROR_MEMORY
 }Status;
+
+Status str_len(const char *str, size_t *result){
+    if(str == NULL || result == NULL){
+        return STATUS_ERROR_NULL;
+    }
+    size_t len = 0;
+    while(str[len] != '\0'){
+        len++;
+    }
+    *result = len;
+    return STATUS_OK;
+}
 
 Status make_out_path(const char *path, char **out){
     if(path == NULL || out == NULL){
@@ -38,17 +51,6 @@ Status make_out_path(const char *path, char **out){
     }
     out_path[pos] = '\0';
     *out = out_path;
-    return STATUS_OK;
-}
-Status str_len(const char *str, size_t *result){
-    if(str == NULL || result == NULL){
-        return STATUS_ERROR_NULL;
-    }
-    size_t len = 0;
-    while(str[len] != '\0'){
-        len++;
-    }
-    *result = len;
     return STATUS_OK;
 }
 
@@ -123,6 +125,8 @@ Status only_letters(const char *filename, const char *outname){
     if(data){
         fprintf(out, "%zu\n", count);
     }
+    fclose(in);
+    fclose(out);
     return STATUS_OK;
 }
 
@@ -136,17 +140,17 @@ Status no_digits(const char *filename, const char *outname){
         return STATUS_ERROR_FILE;
     }
 
-    FILE *out = fopen(filename, "w");
+    FILE *out = fopen(outname, "w");
     if(out == NULL){
         fclose(in);
         return STATUS_ERROR_FILE;
     }
     int c;
     while((c = fgetc(in)) != EOF){
-        if(c == '\n'){
-            continue; 
+        if(c >= '0' && c <= '9'){
+            continue;                    
         }
-        fputc(c, out);
+        fputc(c, out);                   
     }
     fclose(in);
     fclose(out);
@@ -253,8 +257,6 @@ int main(int argc, char *argv[]){
         printf("Неверное число аргументов для этого флага\n");
         return 1;
     }
-
-    // ДОБАВЛЕНО: путь к выходному файлу
     const char *in_path = argv[2];
     char *gen = NULL;
     const char *out_path = NULL;
