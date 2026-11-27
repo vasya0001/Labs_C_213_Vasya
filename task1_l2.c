@@ -11,6 +11,8 @@ typedef enum{
     STATUS_ERROR_MEMORY
 }Status;
 
+
+
 Status parse_uint(const char *str, unsigned int *value) {
     if (str == NULL || value == NULL) {
         return STATUS_ERROR_NULL;
